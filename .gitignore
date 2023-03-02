@@ -1,0 +1,11 @@
+# Ignorar archivos y directorios generados por PHP
+vendor/
+composer.lock
+composer.phar
+
+# Ignorar archivos de configuración
+config/*.env
+
+# Ignorar archivos de caché y logs
+log/
+cache/
