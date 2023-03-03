@@ -5,9 +5,11 @@ class Router
 	private $main = "/";
 	private $routes = [];
 	private $group = "";
+	private $request = null;
 
-	public function __construct()
+	public function __construct(Request $request)
 	{
+		$this->request = $request;
 		$this->readRoutes();
 	}
 
@@ -18,7 +20,7 @@ class Router
 
 	public function addRoute($method, $path, $handler)
 	{
-		$path = $this->group == '' ? $this->group . $path : $this->group;
+		$path = $this->group != '' ? $this->group . $path : $path;
 		$this->routes[] = [
 			'method' => $method,
 			'path' => $path,
@@ -68,7 +70,8 @@ class Router
 				$pattern = '#^' . preg_replace('#/:([^/]+)#', '/(?<$1>[^/]+)', $path) . '$#';
 				if (preg_match($pattern, $url, $matches)) {
 					$params = array_intersect_key($matches, array_flip(array_filter(array_keys($matches), 'is_string')));
-					return call_user_func($route['handler'], $params);
+					$this->request->setParams($params);
+					return call_user_func($route['handler'], $this->request->getParams());
 				}
 			}
 		}
