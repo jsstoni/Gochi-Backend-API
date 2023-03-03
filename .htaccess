@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+	Options +Indexes
+	Options +FollowSymlinks
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
+
+	RewriteEngine On
+
+	#RewriteCond %{HTTPS} off
+	#RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+	# Handle Front Controller...
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^ index.php [L]
+</IfModule>
