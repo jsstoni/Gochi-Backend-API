@@ -64,11 +64,13 @@ class Router
 
 	public function dispatch($method, $url)
 	{
+		$urlParts = parse_url($url);
+		$pathWithQuery = $urlParts['path'] . (isset($urlParts['query']) ? '?' . $urlParts['query'] : '');
 		foreach ($this->routes as $route) {
 			if ($route['method'] == $method) {
 				$path = $this->main . $route['path'];
-				$pattern = '#^' . preg_replace('#/:([^/]+)#', '/(?<$1>[^/]+)', $path) . '$#';
-				if (preg_match($pattern, $url, $matches)) {
+				$pattern = '#^' . preg_replace('#/:([^/]+)#', '/(?<$1>[^/]+)', $path) . '(\?.*)?$#';
+				if (preg_match($pattern, $pathWithQuery, $matches)) {
 					$params = array_intersect_key($matches, array_flip(array_filter(array_keys($matches), 'is_string')));
 					$this->request->setParams($params);
 					return call_user_func($route['handler'], $this->request->getParams());
