@@ -6,6 +6,7 @@ class Router
 	private $routes = [];
 	private $group = "";
 	private $request = null;
+	private $middleware = [];
 
 	public function __construct(Request $request)
 	{
@@ -18,37 +19,7 @@ class Router
 		$this->main = APP_BASE_PATH;
 	}
 
-	public function addRoute($method, $path, $handler)
-	{
-		$path = $this->group != '' ? $this->group . $path : $path;
-		$this->routes[] = [
-			'method' => $method,
-			'path' => $path,
-			'handler' => $handler
-		];
-	}
-
-	public function get($path, $handler)
-	{
-		$this->addRoute('GET', $path, $handler);
-	}
-
-	public function post($path, $handler)
-	{
-		$this->addRoute('POST', $path, $handler);
-	}
-
-	public function put($path, $handler)
-	{
-		$this->addRoute('PUT', $path, $handler);
-	}
-
-	public function delete($path, $handler)
-	{
-		$this->addRoute('DELETE', $path, $handler);
-	}
-
-	public function readRoutes()
+	private function readRoutes()
 	{
 		$files = glob(dirname(__DIR__) . '/routes/*.php');
 		foreach ($files as $file) {
@@ -62,6 +33,37 @@ class Router
 		}
 	}
 
+	public function get($path, $handler, ...$middleware)
+	{
+		$this->addRoute('GET', $path, $handler, $middleware);
+	}
+
+	public function post($path, $handler, ...$middleware)
+	{
+		$this->addRoute('POST', $path, $handler, $middleware);
+	}
+
+	public function put($path, $handler, ...$middleware)
+	{
+		$this->addRoute('PUT', $path, $handler, $middleware);
+	}
+
+	public function delete($path, $handler, ...$middleware)
+	{
+		$this->addRoute('DELETE', $path, $handler, $middleware);
+	}
+
+	private function addRoute($method, $path, $handler, $middleware)
+	{
+		$path = $this->group != '' ? $path != '/' ? $this->group . $path : $this->group : $path;
+		$this->routes[] = [
+			'method' => $method,
+			'path' => $path,
+			'handler' => $handler,
+			'middleware' => $middleware
+		];
+	}
+
 	public function dispatch($method, $url)
 	{
 		$urlParts = parse_url($url);
@@ -69,11 +71,21 @@ class Router
 		foreach ($this->routes as $route) {
 			if ($route['method'] == $method) {
 				$path = $this->main . $route['path'];
-				$pattern = '#^' . preg_replace('#/:([^/]+)#', '/(?<$1>[^/]+)', $path) . '(\?.*)?$#';
+				$pattern = '#^' . preg_replace('#/:([^/]+)#', '/(?<$1>[^/]+)', $path) . '(/?)?(\?.*)?$#';
 				if (preg_match($pattern, $pathWithQuery, $matches)) {
 					$params = array_intersect_key($matches, array_flip(array_filter(array_keys($matches), 'is_string')));
 					$this->request->setParams($params);
-					return call_user_func($route['handler'], $this->request->getParams());
+					$params = $this->request->getParams();
+					foreach ($route['middleware'] as $middleware) {
+						if (function_exists($middleware)) {
+							$response = call_user_func($middleware, $params);
+							if (isset($response['error'])) {
+								echo json_encode($response);
+								return;
+							}
+						}
+					}
+					return call_user_func($route['handler'], $params);
 				}
 			}
 		}

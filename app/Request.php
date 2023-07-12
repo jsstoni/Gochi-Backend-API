@@ -16,6 +16,21 @@ class Request
 		}else if ($this->contentType === 'application/json') {
 			$this->params['body'] = json_decode($body, true);
 		}
+		$this->params['body']['hash'] = $this->getToken();
+	}
+
+
+	public function descodificar($code) {
+		$iv = base64_encode(openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-ecb')));
+		$valor = base64_decode($code);
+		return openssl_decrypt($valor, 'aes-256-ecb', 'cE&ED#24=BE&C937E.=8', true, $iv);
+	}
+
+	public function getToken() {
+		$headers = apache_request_headers();
+		if (isset($headers['Authorization'])) {
+			return $this->descodificar($headers['Authorization']);
+		}
 	}
 
 	public function processRequest($body)

@@ -1,0 +1,169 @@
+array (
+  'query' => 
+  array (
+  ),
+  'body' => 
+  array (
+    'id' => 59,
+    'parent_id' => 0,
+    'status' => 'completed',
+    'currency' => 'USD',
+    'version' => '6.9.4',
+    'prices_include_tax' => false,
+    'date_created' => '2023-03-28T12:21:25',
+    'date_modified' => '2023-03-28T12:38:44',
+    'discount_total' => '0.00',
+    'discount_tax' => '0.00',
+    'shipping_total' => '0.00',
+    'shipping_tax' => '0.00',
+    'cart_tax' => '0.00',
+    'total' => '15000.00',
+    'total_tax' => '0.00',
+    'customer_id' => 1,
+    'order_key' => 'wc_order_m1YlBotrqxypT',
+    'billing' => 
+    array (
+      'first_name' => 'Jesus',
+      'last_name' => 'perez',
+      'company' => '',
+      'address_1' => 'Madrid 505',
+      'address_2' => '',
+      'city' => 'Madrid',
+      'state' => 'SV-CA',
+      'postcode' => '24900010',
+      'country' => 'SV',
+      'email' => 'jotaperezaraujo@gmail.com',
+      'phone' => '948977182',
+    ),
+    'shipping' => 
+    array (
+      'first_name' => '',
+      'last_name' => '',
+      'company' => '',
+      'address_1' => '',
+      'address_2' => '',
+      'city' => '',
+      'state' => '',
+      'postcode' => '',
+      'country' => '',
+      'phone' => '',
+    ),
+    'payment_method' => 'cod',
+    'payment_method_title' => 'Contra reembolso',
+    'transaction_id' => '',
+    'customer_ip_address' => '127.0.0.1',
+    'customer_user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/111.0',
+    'created_via' => 'checkout',
+    'customer_note' => '',
+    'date_completed' => '2023-03-28T12:38:44',
+    'date_paid' => '2023-03-28T12:38:44',
+    'cart_hash' => 'c89b2413639e6973ee70caae1100bd16',
+    'number' => '59',
+    'meta_data' => 
+    array (
+      0 => 
+      array (
+        'id' => 764,
+        'key' => 'is_vat_exempt',
+        'value' => 'no',
+      ),
+      1 => 
+      array (
+        'id' => 769,
+        'key' => '_new_order_email_sent',
+        'value' => 'true',
+      ),
+    ),
+    'line_items' => 
+    array (
+      0 => 
+      array (
+        'id' => 5,
+        'name' => 'Producto de prueba - 37',
+        'product_id' => 20,
+        'variation_id' => 25,
+        'quantity' => 1,
+        'tax_class' => '',
+        'subtotal' => '15000.00',
+        'subtotal_tax' => '0.00',
+        'total' => '15000.00',
+        'total_tax' => '0.00',
+        'taxes' => 
+        array (
+        ),
+        'meta_data' => 
+        array (
+          0 => 
+          array (
+            'id' => 51,
+            'key' => 'talla',
+            'value' => '37',
+            'display_key' => 'Talla',
+            'display_value' => '37',
+          ),
+        ),
+        'sku' => '15-37',
+        'price' => 15000,
+        'image' => 
+        array (
+          'id' => 0,
+          'src' => '',
+        ),
+        'parent_name' => 'Producto de prueba',
+      ),
+    ),
+    'tax_lines' => 
+    array (
+    ),
+    'shipping_lines' => 
+    array (
+    ),
+    'fee_lines' => 
+    array (
+    ),
+    'coupon_lines' => 
+    array (
+    ),
+    'refunds' => 
+    array (
+    ),
+    'payment_url' => 'http://localhost/wp/index.php/finalizar-compra/order-pay/59/?pay_for_order=true&key=wc_order_m1YlBotrqxypT',
+    'is_editable' => false,
+    'needs_payment' => false,
+    'needs_processing' => true,
+    'date_created_gmt' => '2023-03-28T15:21:25',
+    'date_modified_gmt' => '2023-03-28T15:38:44',
+    'date_completed_gmt' => '2023-03-28T15:38:44',
+    'date_paid_gmt' => '2023-03-28T15:38:44',
+    'currency_symbol' => '$',
+    '_links' => 
+    array (
+      'self' => 
+      array (
+        0 => 
+        array (
+          'href' => 'http://localhost/wp/index.php/wp-json/wc/v3/orders/59',
+        ),
+      ),
+      'collection' => 
+      array (
+        0 => 
+        array (
+          'href' => 'http://localhost/wp/index.php/wp-json/wc/v3/orders',
+        ),
+      ),
+      'customer' => 
+      array (
+        0 => 
+        array (
+          'href' => 'http://localhost/wp/index.php/wp-json/wc/v3/customers/1',
+        ),
+      ),
+    ),
+  ),
+  'params' => 
+  array (
+    'id' => 'id',
+    'ecommerce' => 'woocommerce',
+  ),
+)
