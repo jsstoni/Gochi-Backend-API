@@ -5,6 +5,7 @@ composer.phar
 
 # Ignorar archivos de configuración
 config/*.env
+*.env
 
 # Ignorar archivos de caché y logs
 log/
