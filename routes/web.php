@@ -1,23 +1,24 @@
 <?php
+
 use App\Router;
 use App\DB;
 
-function codificar($id) {
-	$iv = base64_encode(openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-ecb')));
-	return base64_encode(openssl_encrypt(
-		$id, //string a codificar
-		'aes-256-ecb',
-		'cE&ED#24=BE&C937E.=8',
-		true,
-		$iv
-	));
+function codificar($id)
+{
+    // No se utiliza IV en ECB, así que no es necesario generarlo
+    return base64_encode(openssl_encrypt(
+        $id, // string a codificar
+        'aes-256-ecb',
+        'cE&ED#24=BE&C937E.=8',
+        true
+    ));
 }
 
-Router::get('/', function() {
-	echo "hola mundo";
+Router::get('/', function () {
+	echo json_encode(['success' => 1]);
 });
 
-Router::post('/login', function($req) {
+Router::post('/login', function ($req) {
 	$email = $req['body']['email'];
 	$password = $req['body']['password'];
 	if (!empty($email) && !empty($password)) {
@@ -27,20 +28,20 @@ Router::post('/login', function($req) {
 			$rows = $result->fetch_array(MYSQLI_ASSOC);
 			if (password_verify($password, $rows['password'])) {
 				$response = array('message' => array('token' => codificar($rows['id']), 'amount' => $rows['amount']));
-			}else {
+			} else {
 				$response = array('error' => 'Contraseña incorrecta');
 			}
-		}else {
+		} else {
 			$response = array('error' => 'Email no existe');
 		}
 		$result->close();
-	}else {
+	} else {
 		$response = array('error' => 'Complete formulario');
 	}
 	echo json_encode($response);
 });
 
-Router::post('/register', function($req) {
+Router::post('/register', function ($req) {
 	$email = $req['body']['email'];
 	$password = password_hash($req['body']['password'], PASSWORD_DEFAULT);
 	if (!empty($email) && !empty($password) && !empty($req['body']['repass'])) {
@@ -50,13 +51,13 @@ Router::post('/register', function($req) {
 				$result = $db->exec("INSERT INTO users (email, password) VALUES ('{$email}', '{$password}')");
 				$result->close();
 				$response = array('message' => 'Usuario registrado');
-			}else {
+			} else {
 				$response = array('error' => 'Contraseñas no son iguales');
 			}
-		}else {
+		} else {
 			$response = array('error' => 'Email invalido');
 		}
-	}else {
+	} else {
 		$response = array('error' => 'Complete formulario');
 	}
 	echo json_encode($response);
