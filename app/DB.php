@@ -1,14 +1,18 @@
 <?php
+
 namespace App;
+
 use mysqli;
+
 class DB
 {
 	private $connect;
 	public function __construct()
 	{
-		$this->connect = new mysqli($_ENV['host'], $_ENV['user'], $_ENV['pass'], $_ENV['db']);
+		$config = include_once __DIR__ . '/../config/db.php';
+		$this->connect = new mysqli($config['server'], $config['user'], $config['password'], $config['database']);
 		if ($this->connect->connect_errno) {
-			die("La conexión a la base de datos falló: ". $this->connect->connect_error);
+			die("La conexión a la base de datos falló: " . $this->connect->connect_error);
 		}
 	}
 
