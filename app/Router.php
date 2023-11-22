@@ -1,12 +1,13 @@
 <?php
+
 namespace App;
+
 class Router
 {
 	private $main = "/";
-	private $routes = [];
-	private $group = "";
+	private static $routes = [];
+	private static $group = "";
 	private $request = null;
-	private $middleware = [];
 
 	public function __construct(Request $request)
 	{
@@ -14,9 +15,10 @@ class Router
 		$this->readRoutes();
 	}
 
-	public function basePath($path = "") {
-		define('APP_BASE_PATH', '/' . $path);
-		$this->main = APP_BASE_PATH;
+	public function basePath($path = "")
+	{
+		define('APP_BASE_PATH', $path);
+		$this->main = APP_BASE_PATH == '/' ? '' : APP_BASE_PATH;
 	}
 
 	private function readRoutes()
@@ -24,39 +26,39 @@ class Router
 		$files = glob(dirname(__DIR__) . '/routes/*.php');
 		foreach ($files as $file) {
 			if (basename($file) == "web.php") {
-				$this->group = "";
+				self::$group = "";
 				include $file;
-			}else {
-				$this->group = '/' . str_replace(".php", "", basename($file));
+			} else {
+				self::$group = '/' . str_replace(".php", "", basename($file));
 				include $file;
 			}
 		}
 	}
 
-	public function get($path, $handler, ...$middleware)
+	public static function get($path, $handler, ...$middleware)
 	{
-		$this->addRoute('GET', $path, $handler, $middleware);
+		self::addRoute('GET', $path, $handler, $middleware);
 	}
 
-	public function post($path, $handler, ...$middleware)
+	public static function post($path, $handler, ...$middleware)
 	{
-		$this->addRoute('POST', $path, $handler, $middleware);
+		self::addRoute('POST', $path, $handler, $middleware);
 	}
 
-	public function put($path, $handler, ...$middleware)
+	public static function put($path, $handler, ...$middleware)
 	{
-		$this->addRoute('PUT', $path, $handler, $middleware);
+		self::addRoute('PUT', $path, $handler, $middleware);
 	}
 
-	public function delete($path, $handler, ...$middleware)
+	public static function delete($path, $handler, ...$middleware)
 	{
-		$this->addRoute('DELETE', $path, $handler, $middleware);
+		self::addRoute('DELETE', $path, $handler, $middleware);
 	}
 
-	private function addRoute($method, $path, $handler, $middleware)
+	private static function addRoute($method, $path, $handler, $middleware)
 	{
-		$path = $this->group != '' ? $path != '/' ? $this->group . $path : $this->group : $path;
-		$this->routes[] = [
+		$path = (self::$group != '') ? (($path != '/') ? (self::$group . $path) : self::$group) : $path;
+		self::$routes[] = [
 			'method' => $method,
 			'path' => $path,
 			'handler' => $handler,
@@ -68,7 +70,7 @@ class Router
 	{
 		$urlParts = parse_url($url);
 		$pathWithQuery = $urlParts['path'] . (isset($urlParts['query']) ? '?' . $urlParts['query'] : '');
-		foreach ($this->routes as $route) {
+		foreach (self::$routes as $route) {
 			if ($route['method'] == $method) {
 				$path = $this->main . $route['path'];
 				$pattern = '#^' . preg_replace('#/:([^/]+)#', '/(?<$1>[^/]+)', $path) . '(/?)?(\?.*)?$#';

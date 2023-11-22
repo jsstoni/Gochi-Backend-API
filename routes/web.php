@@ -13,6 +13,10 @@ function codificar($id) {
 	));
 }
 
+Router::get('/', function() {
+	echo "hola mundo";
+});
+
 Router::post('/login', function($req) {
 	$email = $req['body']['email'];
 	$password = $req['body']['password'];
